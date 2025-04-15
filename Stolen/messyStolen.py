@@ -1,9 +1,11 @@
 import pygame
 import random
 import sys
-
-# Initialize pygame
+import os
 pygame.init()
+
+image = pygame.image.load('pepperoni.svg')
+scaled_image = pygame.transform.smoothscale(image, (15, 15))
 
 # screen dimension
 SCREEN_WIDTH = 600

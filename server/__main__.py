@@ -6,6 +6,10 @@ import time
 import pygame
 import sys
 
+# screen dimension
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
+
 # Initialize pygame
 pygame.init()
 
