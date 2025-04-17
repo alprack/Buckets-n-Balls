@@ -34,6 +34,7 @@ def GameThread():
     pygame.display.set_caption("Catch the Toppings!")
     font = pygame.font.Font(None, 36)
 
+    # loading the toppings and scaling them 
     topping_images = [
         pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("pepperoni.png").convert_alpha(), (30, 30)),
@@ -57,7 +58,7 @@ def GameThread():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r and game_over:
-                    # Reset game
+                    # reset game after player loses 
                     basket_x = SCREEN_WIDTH // 2 - BASKET_WIDTH // 2
                     basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
                     score = 0
@@ -70,20 +71,24 @@ def GameThread():
 
         keys = pygame.key.get_pressed()
         if not game_over:
+        # just moving based on user input 
             if keys[pygame.K_a]:
                 basket_x -= basket_speed
             if keys[pygame.K_d]:
                 basket_x += basket_speed
-            if keys[pygame.K_w] : 
-                basket_y -= basket_speed
-            if keys[pygame.K_s] : 
-                basket_y += basket_speed
+           #if keys[pygame.K_w] : 
+           #     basket_y -= basket_speed
+           # if keys[pygame.K_s] : 
+           #     basket_y += basket_speed
 
             topping_y += topping_speed
 
+            # collosion detection 
             basket_rect = pygame.Rect(basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT)
             topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
 
+            # checking for collision between the basket and topping
+            # basically, if the player missed a topping 
             if basket_rect.colliderect(topping_rect):
                 score += 1
                 topping_speed += 0.5
@@ -92,6 +97,7 @@ def GameThread():
                 topping_y = 0
                 topping_image = random.choice(topping_images)
 
+            # if the topping has fallen past the screen, GAME OVER 
             if topping_y > SCREEN_HEIGHT:
                 game_over = True
 
@@ -114,45 +120,51 @@ def ServerThread() :
 
     host = socket.gethostbyname(socket.gethostname())
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    host = s.getsockname()[0]
+    s.connect(("8.8.8.8", 80))  
+    host = s.getsockname()[0]  
     s.close()
-    print(host)
-    port = 500 
-    
-    server_socket = socket.socket() 
-    server_socket.bind((host, port))
-    print("Server listening on port...")
-    server_socket.listen(1)
+    print(f"Server IP: {host}")
+    port = 5001  
 
-    conn, address = server_socket.accept()
-    print("Connected from :" + str(address))
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    print("Server enabled...")
+    server_socket.listen(2)
+
+    conn, address = server_socket.accept()  
+    client_ip = address[0] 
+    print(f"Connection from client IP: {client_ip}")
 
     while True : 
         data = conn.recv(1024).decode()
         if not data : 
             break 
 
-        if not game_over : 
-            if data == 'a' :
-                basket_x -= basket_speed
-            elif data == 'd' : 
-                basket_x += basket_speed
-            elif data == 'w' : 
-                basket_y -= basket_speed
-            elif data == 's' : 
-                basket_y += basket_speed
-        else : 
-            if data == 'r' : 
-                game_over = False
-                topping_speed = 3
-                basket_speed = 5 
-                topping_y = 0 
-                score = 0 
+        if data == 'a' :
+            basket_x -= basket_speed
+        elif data == 'd' : 
+            basket_x += basket_speed
+        elif data == 'w' : 
+            basket_y -= basket_speed
+        elif data == 's' : 
+            basket_y += basket_speed
+        if data == 'r' : 
+            game_over = False
+            topping_speed = 3
+            basket_speed = 5 
+            topping_y = 0 
+            score = 0 
+            print("Game restarted")
         
     conn.close() 
 
+def main():
+    t2 = threading.Thread(target=ServerThread, args=[])
+    t2.start()  
+
+    GameThread()  
+
+    t2.join() 
+
 if __name__ == "__main__":
-    GameThread() 
-
-
+    main()

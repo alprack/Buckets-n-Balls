@@ -21,14 +21,18 @@ def on_press(key) :
         elif key.char  == 'w' : 
             client_socket.send('w'.encode())
             time.sleep(0.1)
-    except key.char == 'r' : 
-        pass
+        elif key.char == 'r' : 
+            client_socket.send('r'.encode())
+    except AttributeError :
+        pass 
+
+
 
 
 def client_program():
     print("trying to connect to server")
-    host = "10.22.48.154"
-    port = 5002  # socket server port number
+    host = "10.14.92.36"
+    port = 5003  # socket server port number
 
     global client_socket
     client_socket = socket.socket()  # instantiate
