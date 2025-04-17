@@ -34,8 +34,19 @@ game_over = False
 def GameThread() : 
     global basket_x, basket_x, ball_x, ball_y, basket_speed, basket_speed
     global score, game_over 
+    
+    pygame.init()
 
-    pygame.init() 
+    topping_images = [
+        pygame.transform.scale(pygame.image.load("anchovy.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("pepporoni.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("pepper.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("mushroom.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("olive.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("onion.svg").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("sausage.svg").convert_alpha(), (30, 30))
+    ]
+    
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Catch the Toppings!")
     
