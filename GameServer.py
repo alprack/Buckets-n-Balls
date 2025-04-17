@@ -36,7 +36,7 @@ def GameThread():
 
     topping_images = [
         pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("pepporoni.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("pepperoni.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("pepper.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("mushroom.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("olive.png").convert_alpha(), (30, 30)),
