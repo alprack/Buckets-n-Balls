@@ -74,6 +74,10 @@ def GameThread():
                 basket_x -= basket_speed
             if keys[pygame.K_d]:
                 basket_x += basket_speed
+            if keys[pygame.K_w] : 
+                basket_y -= basket_speed
+            if keys[pygame.K_s] : 
+                basket_y += basket_speed
 
             topping_y += topping_speed
 
@@ -149,9 +153,6 @@ def ServerThread() :
     conn.close() 
 
 if __name__ == "__main__":
-    t2 = threading.Thread(target=ServerThread)
-    t2.start()
-    GameThread()
-
+    GameThread() 
 
 
