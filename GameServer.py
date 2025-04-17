@@ -5,80 +5,153 @@ import socket
 import time
 import pygame
 import sys
+import threading 
 
-# screen dimension
+# Screen dimensions
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 400
 
-# Initialize pygame
-pygame.init()
-
-# Ball seting
-BALL_RADIUS = 15
-
-
-# Basket setting
+# Basket settings
 BASKET_WIDTH = 100
 BASKET_HEIGHT = 20
 
-#Game variables
+# Game state variables
+basket_speed = 5
 basket_x = SCREEN_WIDTH // 2 - BASKET_WIDTH // 2
-basket_y = SCREEN_HEIGHT - BASKET_HEIGHT -10
-ball_x = random.randint(0, SCREEN_WIDTH-BALL_RADIUS)
-ball_y = 0
+basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
 score = 0
-ball_speed = 3 
-basket_speed = 5 
-game_over = False 
+game_over = False
 
-def GameThread() : 
-    global basket_x, basket_x, ball_x, ball_y, basket_speed, basket_speed
-    global score, game_over 
-    
+topping_x = random.randint(0, SCREEN_WIDTH - 30)
+topping_y = 0
+topping_speed = 3
+
+def GameThread():
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over
+
     pygame.init()
-
-    topping_images = [
-        pygame.transform.scale(pygame.image.load("anchovy.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("pepporoni.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("pepper.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("mushroom.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("olive.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("onion.svg").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("sausage.svg").convert_alpha(), (30, 30))
-    ]
-    
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Catch the Toppings!")
-    
-    while True : 
-        for event in pygame.event.get() : 
-            if event.type == pygame.QUIT : 
+    font = pygame.font.Font(None, 36)
+
+    topping_images = [
+        pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("pepporoni.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("pepper.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("mushroom.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("olive.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("onion.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("sausage.png").convert_alpha(), (30, 30))
+    ]
+
+    topping_image = random.choice(topping_images)
+
+    clock = pygame.time.Clock()
+
+    while True:
+        screen.fill((255, 255, 255))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.quit() 
-            
-        if not game_over : 
-            ball_y += ball_speed
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r and game_over:
+                    # Reset game
+                    basket_x = SCREEN_WIDTH // 2 - BASKET_WIDTH // 2
+                    basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
+                    score = 0
+                    topping_speed = 3
+                    basket_speed = 5
+                    topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                    topping_y = 0
+                    topping_image = random.choice(topping_images)
+                    game_over = False
 
-            # rect is collosion detection 
+        keys = pygame.key.get_pressed()
+        if not game_over:
+            if keys[pygame.K_a]:
+                basket_x -= basket_speed
+            if keys[pygame.K_d]:
+                basket_x += basket_speed
+
+            topping_y += topping_speed
+
             basket_rect = pygame.Rect(basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT)
-            ball_rect = pygame.Rect(ball_x, ball_y, BALL_RADIUS, BALL_RADIUS)
+            topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
 
-            collosion = basket_rect.collidedict(ball_rect)
-
-            if collosion : 
+            if basket_rect.colliderect(topping_rect):
                 score += 1
-                ball_speed += 0.5
-                basket_speed += 0.5 
-                ball_x = random.randint(0, SCREEN_WIDTH - BALL_RADIUS)
-                ball_y = 0
+                topping_speed += 0.5
+                basket_speed += 0.5
+                topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                topping_y = 0
+                topping_image = random.choice(topping_images)
 
-            if ball_y > SCREEN_HEIGHT : 
-                game_over = True 
+            if topping_y > SCREEN_HEIGHT:
+                game_over = True
+
+        # Draw everything
+        screen.blit(topping_image, (topping_x, topping_y))
+        pygame.draw.rect(screen, (0, 0, 200), (basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT))
+
+        score_text = font.render("Score: " + str(score), True, (0, 0, 0))
+        screen.blit(score_text, (10, 10))
+
+        if game_over:
+            over_text = font.render("GAME OVER! Press R to Restart!", True, (255, 0, 0))
+            screen.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, SCREEN_HEIGHT // 2))
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def ServerThread() : 
+    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score
+
+    host = socket.gethostbyname(socket.gethostname())
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    host = s.getsockname()[0]
+    s.close()
+    print(host)
+    port = 500 
+    
+    server_socket = socket.socket() 
+    server_socket.bind((host, port))
+    print("Server listening on port...")
+    server_socket.listen(1)
+
+    conn, address = server_socket.accept()
+    print("Connected from :" + str(address))
+
+    while True : 
+        data = conn.recv(1024).decode()
+        if not data : 
+            break 
+
+        if not game_over : 
+            if data == 'a' :
+                basket_x -= basket_speed
+            elif data == 'd' : 
+                basket_x += basket_speed
+            elif data == 'w' : 
+                basket_y -= basket_speed
+            elif data == 's' : 
+                basket_y += basket_speed
+        else : 
+            if data == 'r' : 
+                game_over = False
+                topping_speed = 3
+                basket_speed = 5 
+                topping_y = 0 
+                score = 0 
         
-        screen.fill
+    conn.close() 
 
-            
-            
+if __name__ == "__main__":
+    t2 = threading.Thread(target=ServerThread)
+    t2.start()
+    GameThread()
 
 
 
