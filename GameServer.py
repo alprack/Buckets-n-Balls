@@ -49,6 +49,13 @@ def GameThread():
 
     topping_image = random.choice(topping_images)
 
+    evil_topping_images = [
+        pygame.transform.scale(pygame.image.load("applecore.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("fishbones.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("bananapeel.png").convert_alpha(), (30, 30)),
+    ]
+    evil_topping_image = random.choice(evil_topping_images)
+
     clock = pygame.time.Clock()
 
     while True:
