@@ -102,7 +102,7 @@ def GameThread():
             if basket_rect.colliderect(topping_rect):
                 score += 1
                 topping_speed += 0.5
-                basket_speed += 3.8
+                basket_speed += 3.5
                 topping_x = random.randint(0, SCREEN_WIDTH - 30)
                 topping_y = 0
                 topping_image = random.choice(topping_images)
