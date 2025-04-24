@@ -26,8 +26,15 @@ topping_x = random.randint(0, SCREEN_WIDTH - 30)
 topping_y = 0
 topping_speed = 3
 
+evil_topping_x = random.randint(0, SCREEN_WIDTH - 30)
+evil_topping_y = 0
+evil_topping_speed = 3
+
+current_topping = "normal" 
+
+
 def GameThread():
-    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, evil_topping_x, evil_topping_y, evil_topping_speed, current_topping
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -52,9 +59,13 @@ def GameThread():
     evil_topping_images = [
         pygame.transform.scale(pygame.image.load("applecore.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("fishbones.png").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("bananapeel.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("bananapeel.png").convert_alpha(), (30, 30))
     ]
     evil_topping_image = random.choice(evil_topping_images)
+
+    topping_probability = [
+        "normal", "normal", "normal", "evil"
+    ]
 
     clock = pygame.time.Clock()
 
@@ -73,11 +84,13 @@ def GameThread():
                     basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
                     score = 0
                     topping_speed = 3
+                    evil_topping_speed = 3
                     basket_speed = 20
                     topping_x = random.randint(0, SCREEN_WIDTH - 30)
                     topping_y = 0
                     topping_image = random.choice(topping_images)
                     game_over = False
+                    current_topping = "normal"
 
         keys = pygame.key.get_pressed()
         if not game_over:
@@ -91,28 +104,52 @@ def GameThread():
            # if keys[pygame.K_s] : 
            #     basket_y += basket_speed
 
-            topping_y += topping_speed
+            if current_topping == "normal":
+                topping_y += topping_speed
+            else:
+                evil_topping_y += evil_topping_speed
 
             # collosion detection 
             basket_rect = pygame.Rect(basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT)
-            topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
 
-            # checking for collision between the basket and topping
-            # basically, if the player missed a topping 
-            if basket_rect.colliderect(topping_rect):
-                score += 1
-                topping_speed += 0.5
-                basket_speed += 3.5
-                topping_x = random.randint(0, SCREEN_WIDTH - 30)
-                topping_y = 0
-                topping_image = random.choice(topping_images)
-
-            # if the topping has fallen past the screen, GAME OVER 
-            if topping_y > SCREEN_HEIGHT:
+            if current_topping == "normal":
+                topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
+                if basket_rect.colliderect(topping_rect):
+                    score += 1
+                    topping_speed += 0.5
+                    evil_topping_speed += 0.5
+                    basket_speed += 3.5
+                    topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                    topping_y = 0
+                    topping_image = random.choice(topping_images)
+                    next_topping = random.choice(topping_probability)
+                    current_topping = next_topping 
+            else:  # Evil topping logic
+                evil_topping_rect = pygame.Rect(evil_topping_x, evil_topping_y, 30, 30)
+                if basket_rect.colliderect(evil_topping_rect):
+                    game_over = True
+                if evil_topping_y > SCREEN_HEIGHT:
+                    evil_topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                    evil_topping_y = 0
+                    evil_topping_image = random.choice(evil_topping_images)
+                    next_topping = random.choice(topping_probability)
+                    current_topping = next_topping  
+            # Topping falling past screen
+            if topping_y > SCREEN_HEIGHT and current_topping == "normal":
                 game_over = True
 
+            if evil_topping_y > SCREEN_HEIGHT and current_topping == "evil":
+                evil_topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                evil_topping_y = 0
+                evil_topping_image = random.choice(evil_topping_images)
+                next_topping = random.choice(topping_probability)
+                current_topping = next_topping 
+
         # Draw everything
-        screen.blit(topping_image, (topping_x, topping_y))
+        if current_topping == "normal":
+            screen.blit(topping_image, (topping_x, topping_y))
+        else:
+            screen.blit(evil_topping_image, (evil_topping_x, evil_topping_y))
         pygame.draw.rect(screen, (0, 0, 200), (basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT))
 
         score_text = font.render("Score: " + str(score), True, (0, 0, 0))
@@ -126,7 +163,7 @@ def GameThread():
         clock.tick(60)
 
 def ServerThread() : 
-    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score
+    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score, evil_topping_speed, evil_topping_y
 
     host = socket.gethostbyname(socket.gethostname())
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
