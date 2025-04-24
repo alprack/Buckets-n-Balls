@@ -208,6 +208,7 @@ def ServerThread() :
         if data == 'r' : 
             game_over = False
             topping_speed = 3
+            evil_topping_speed = 3
             basket_speed = 20 
             topping_y = 0 
             score = 0 
