@@ -4,6 +4,7 @@ import random
 import socket
 import time
 import pygame
+from pygame import mixer
 import sys
 import threading 
 
@@ -63,11 +64,20 @@ def GameThread():
     ]
     evil_topping_image = random.choice(evil_topping_images)
 
+    basket_sprite = pygame.transform.scale(pygame.image.load("ROYPIZZA.png").convert_alpha(), (85, 45))
+    
+
     topping_probability = [
         "normal", "normal", "normal", "evil"
     ]
 
     clock = pygame.time.Clock()
+
+    mixer.init()
+
+    mixer.music.load("papas.mp3")
+    mixer.music.play(-1) 
+    mixer.music.set_volume(0.7) 
 
     while True:
         screen.blit(image, (0, 0))
@@ -201,15 +211,16 @@ def ServerThread() :
             basket_speed = 20 
             topping_y = 0 
             score = 0 
-            print("Game restarted")
-        
+
+
+
     conn.close() 
 
 def main():
     t2 = threading.Thread(target=ServerThread, args=[])
-    t2.start()  
 
     GameThread()  
+    t2.start()  
 
     t2.join() 
 
