@@ -16,7 +16,7 @@ BASKET_WIDTH = 100
 BASKET_HEIGHT = 20
 
 # Game state variables
-basket_speed = 5
+basket_speed = 20
 basket_x = SCREEN_WIDTH // 2 - BASKET_WIDTH // 2
 basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
 score = 0
@@ -34,6 +34,8 @@ def GameThread():
     pygame.display.set_caption("Catch the Toppings!")
     font = pygame.font.Font(None, 36)
 
+    # load background image
+    image = pygame.transform.scale(pygame.image.load("background.png").convert(), (SCREEN_WIDTH, SCREEN_HEIGHT))
     # loading the toppings and scaling them 
     topping_images = [
         pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (30, 30)),
@@ -50,7 +52,8 @@ def GameThread():
     clock = pygame.time.Clock()
 
     while True:
-        screen.fill((255, 255, 255))
+        screen.blit(image, (0, 0))
+        #screen.fill((255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,7 +66,7 @@ def GameThread():
                     basket_y = SCREEN_HEIGHT - BASKET_HEIGHT - 10
                     score = 0
                     topping_speed = 3
-                    basket_speed = 5
+                    basket_speed = 20
                     topping_x = random.randint(0, SCREEN_WIDTH - 30)
                     topping_y = 0
                     topping_image = random.choice(topping_images)
@@ -92,7 +95,7 @@ def GameThread():
             if basket_rect.colliderect(topping_rect):
                 score += 1
                 topping_speed += 0.5
-                basket_speed += 0.5
+                basket_speed += 3.5
                 topping_x = random.randint(0, SCREEN_WIDTH - 30)
                 topping_y = 0
                 topping_image = random.choice(topping_images)
@@ -124,7 +127,7 @@ def ServerThread() :
     host = s.getsockname()[0]  
     s.close()
     print(f"Server IP: {host}")
-    port = 5001  
+    port = 5003  
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
@@ -151,7 +154,7 @@ def ServerThread() :
         if data == 'r' : 
             game_over = False
             topping_speed = 3
-            basket_speed = 5 
+            basket_speed = 20 
             topping_y = 0 
             score = 0 
             print("Game restarted")
