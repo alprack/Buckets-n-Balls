@@ -164,15 +164,14 @@ def ServerThread() :
             basket_speed = 20 
             topping_y = 0 
             score = 0 
-            print("Game restarted")
         
     conn.close() 
 
 def main():
     t2 = threading.Thread(target=ServerThread, args=[])
-    t2.start()  
 
     GameThread()  
+    t2.start()  
 
     t2.join() 
 
