@@ -4,6 +4,7 @@ import random
 import socket
 import time
 import pygame
+from pygame import mixer
 import sys
 import threading 
 
@@ -56,7 +57,16 @@ def GameThread():
     ]
     evil_topping_image = random.choice(evil_topping_images)
 
+    basket_sprite = pygame.transform.scale(pygame.image.load("ROYPIZZA.png").convert_alpha(), (85, 45))
+    
+
     clock = pygame.time.Clock()
+
+    mixer.init()
+
+    mixer.music.load("papas.mp3")
+    mixer.music.play(-1) 
+    mixer.music.set_volume(0.7) 
 
     while True:
         screen.blit(image, (0, 0))
@@ -106,6 +116,7 @@ def GameThread():
                 topping_x = random.randint(0, SCREEN_WIDTH - 30)
                 topping_y = 0
                 topping_image = random.choice(topping_images)
+                basket_sprite
 
             # if the topping has fallen past the screen, GAME OVER 
             if topping_y > SCREEN_HEIGHT:
@@ -113,7 +124,7 @@ def GameThread():
 
         # Draw everything
         screen.blit(topping_image, (topping_x, topping_y))
-        pygame.draw.rect(screen, (0, 0, 200), (basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT))
+        screen.blit(basket_sprite, (basket_x, basket_y))
 
         score_text = font.render("Score: " + str(score), True, (0, 0, 0))
         screen.blit(score_text, (10, 10))
@@ -164,7 +175,9 @@ def ServerThread() :
             basket_speed = 20 
             topping_y = 0 
             score = 0 
-        
+
+
+
     conn.close() 
 
 def main():
