@@ -29,9 +29,10 @@ topping_speed = 3
 
 current_topping = "normal" 
 
+lives = 3
 
 def GameThread():
-    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -146,6 +147,8 @@ def GameThread():
                     topping_image = random.choice(topping_images)
                     game_over = False
                     current_topping = "normal"
+                    lives = 3 
+                    
 
         update_music(score)
         keys = pygame.key.get_pressed()
@@ -182,7 +185,15 @@ def GameThread():
                     next_topping = random.choice(topping_probability)
                     current_topping = next_topping 
                 elif topping_y > SCREEN_HEIGHT:
-                    game_over = True   
+                    lives -= 1
+                    if lives <= 0 : 
+                        game_over = True
+                    else : 
+                        topping_x = random.randint(0, SCREEN_WIDTH - 30)
+                        topping_y = 0
+                        topping_image = random.choice(topping_images)
+                        next_topping = random.choice(topping_probability)
+                        current_topping = next_topping
             elif current_topping == "evil": 
                 evil_topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
                 if basket_rect.colliderect(evil_topping_rect):
@@ -224,6 +235,9 @@ def GameThread():
 
         score_text = font.render("Score: " + str(score), True, (0, 0, 0))
         screen.blit(score_text, (10, 10))
+        lives_text = font.render("Lives: " + str(lives), True, (0, 0, 0))
+        screen.blit(lives_text, (SCREEN_WIDTH - 120, 10))
+
 
         if game_over:
             mixer.music.stop()
