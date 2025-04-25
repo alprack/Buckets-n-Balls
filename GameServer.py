@@ -66,7 +66,6 @@ def GameThread():
     ]
     slow_topping_image = random.choice(slow_topping_images)
 
-    basket_sprite = pygame.transform.scale(pygame.image.load("ROYPIZZA.png").convert_alpha(), (100, 150))
     
 
     topping_probability = [
@@ -74,12 +73,42 @@ def GameThread():
     ]
 
     clock = pygame.time.Clock()
+    
 
     mixer.init()
 
     mixer.music.load("papas.mp3")
     mixer.music.play(-1) 
     mixer.music.set_volume(0.7) 
+
+    show_start_screen = True
+
+    while show_start_screen : 
+        start_screen_image = pygame.image.load("royNerv.jpg").convert_alpha()
+        screen.blit(start_screen_image, (0,0))
+
+        title = font.render("Roy's Pizza Panic!", True, (250,0,0))
+        subtext = font.render("Press SPACE to start helping Roy!", True, (250,0,0))
+        description = font.render("Help him catch all the pizza toppings", True, (250,0,0))
+        description_1 = font.render("and avoid rotten ones!", True, (250,0,0))
+
+
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
+        screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2, 160))
+        screen.blit(description, (SCREEN_WIDTH // 2 - description.get_width() // 2, 200))
+        screen.blit(description_1, (SCREEN_WIDTH // 2 - description_1.get_width() // 2, 240))
+
+
+        basket_sprite = pygame.transform.scale(pygame.image.load("ROYPIZZA.png").convert_alpha(), (100, 150))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get() : 
+            if event.type == pygame.QUIT : 
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE : 
+                show_start_screen = False 
 
     while True:
         screen.blit(image, (0, 0))
