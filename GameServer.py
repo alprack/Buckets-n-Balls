@@ -73,13 +73,28 @@ def GameThread():
     ]
 
     clock = pygame.time.Clock()
-    
 
-    mixer.init()
+    current_music = "papas.mp3"
 
-    mixer.music.load("papas.mp3")
-    mixer.music.play(-1) 
-    mixer.music.set_volume(0.7) 
+    def update_music(score):
+        nonlocal current_music
+        if score < 5 and current_music != "lowScore.ogg":
+            mixer.music.load("lowScore.ogg")
+            mixer.music.play(-1)
+            current_music = "lowScore.ogg"
+        elif 5 <= score < 10 and current_music != "midScore.ogg":
+            mixer.music.load("midScore.ogg")
+            mixer.music.play(-1)
+            current_music = "midScore.ogg"
+        elif 10 <= score < 20 and current_music != "highScore.ogg":
+            mixer.music.load("highScore.ogg")
+            mixer.music.play(-1)
+            current_music = "highScore.ogg"
+        elif score >= 20 and current_music != "ultHighScore.mpg":
+            mixer.music.load("ultHighScore.mpg")
+            mixer.music.play(-1)
+            current_music = "ultHighScore.mpg"
+
 
     show_start_screen = True
 
@@ -132,6 +147,7 @@ def GameThread():
                     game_over = False
                     current_topping = "normal"
 
+        update_music(score)
         keys = pygame.key.get_pressed()
         if not game_over:
         # just moving based on user input 
@@ -144,8 +160,12 @@ def GameThread():
            # if keys[pygame.K_s] : 
            #     basket_y += basket_speed
 
+            if basket_x < 0 : 
+                basket_x = 0
+            if basket_x > SCREEN_WIDTH - BASKET_WIDTH : 
+                basket_x = SCREEN_WIDTH - BASKET_WIDTH
+            
             topping_y += topping_speed
-
 
             # collosion detection 
             basket_rect = pygame.Rect(basket_x, basket_y, BASKET_WIDTH, BASKET_HEIGHT)
@@ -206,6 +226,7 @@ def GameThread():
         screen.blit(score_text, (10, 10))
 
         if game_over:
+            mixer.music.stop()
             over_text = font.render("GAME OVER! Press R to Restart!", True, (255, 0, 0))
             screen.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, SCREEN_HEIGHT // 2))
 
@@ -245,6 +266,12 @@ def ServerThread() :
         #     basket_y -= basket_speed
         # elif data == 's' : 
         #     basket_y += basket_speed
+
+        if basket_x < 0 : 
+            basket_x = 0
+        if basket_x > SCREEN_WIDTH - BASKET_WIDTH : 
+            basket_x = SCREEN_WIDTH - BASKET_WIDTH
+            
 
         if data == 'r' : 
             game_over = False
