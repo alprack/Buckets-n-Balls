@@ -50,7 +50,7 @@ def GameThread():
     image = pygame.transform.scale(pygame.image.load("background.png").convert(), (SCREEN_WIDTH, SCREEN_HEIGHT))
     # loading the toppings and scaling them 
     topping_images = [
-        pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (30, 30)),
+        pygame.transform.scale(pygame.image.load("anchovy.png").convert_alpha(), (40, 40)),
         pygame.transform.scale(pygame.image.load("pepperoni.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("pepper.png").convert_alpha(), (30, 30)),
         pygame.transform.scale(pygame.image.load("mushroom.png").convert_alpha(), (30, 30)),
@@ -62,15 +62,15 @@ def GameThread():
     topping_image = random.choice(topping_images)
 
     evil_topping_images = [
-        pygame.transform.scale(pygame.image.load("applecore.png").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("fishbones.png").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("bananapeel.png").convert_alpha(), (30, 30))
+        pygame.transform.scale(pygame.image.load("applecore.png").convert_alpha(), (40, 40)),
+        pygame.transform.scale(pygame.image.load("fishbones.png").convert_alpha(), (40, 40)),
+        pygame.transform.scale(pygame.image.load("bananapeel.png").convert_alpha(), (40, 40))
     ]
     evil_topping_image = random.choice(evil_topping_images)
     
     slow_topping_images = [
-        pygame.transform.scale(pygame.image.load("poisonbottle.png").convert_alpha(), (30, 30)),
-        pygame.transform.scale(pygame.image.load("orangejuice.png").convert_alpha(), (30, 30))
+        pygame.transform.scale(pygame.image.load("poisonbottle.png").convert_alpha(), (40, 40)),
+        pygame.transform.scale(pygame.image.load("orangejuice.png").convert_alpha(), (40, 40))
     ]
     slow_topping_image = random.choice(slow_topping_images)
 
@@ -78,7 +78,7 @@ def GameThread():
     
 
     topping_probability = [
-        "normal", "slow"
+        "normal", "normal", "normal", "normal", "evil", "slow", "slow"
     ]
 
     clock = pygame.time.Clock()
