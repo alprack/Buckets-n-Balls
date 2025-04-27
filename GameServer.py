@@ -100,19 +100,19 @@ def GameThread():
     show_start_screen = True
 
     while show_start_screen : 
-        start_screen_image = pygame.image.load("royNerv.jpg").convert_alpha()
+        start_screen_image = pygame.image.load("royNerv2.png").convert_alpha()
         screen.blit(start_screen_image, (0,0))
 
-        title = font.render("Roy's Pizza Panic!", True, (250,0,0))
-        subtext = font.render("Press SPACE to start helping Roy!", True, (250,0,0))
-        description = font.render("Help him catch all the pizza toppings", True, (250,0,0))
-        description_1 = font.render("and avoid rotten ones!", True, (250,0,0))
+        title = font.render("Roy's Pizza Panic!", True, (0,0,0))
+        subtext = font.render("Press SPACE to start helping Roy!", True, (0,0,0))
+        description = font.render("Help him catch all the pizza toppings", True, (0,0,0))
+        description_1 = font.render("and avoid rotten ones!", True, (0,0,0))
 
 
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-        screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2, 160))
-        screen.blit(description, (SCREEN_WIDTH // 2 - description.get_width() // 2, 200))
-        screen.blit(description_1, (SCREEN_WIDTH // 2 - description_1.get_width() // 2, 240))
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2 + 75, 100))
+        screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2 + 75, 160))
+        screen.blit(description, (SCREEN_WIDTH // 2 - description.get_width() // 2 + 75, 200))
+        screen.blit(description_1, (SCREEN_WIDTH // 2 - description_1.get_width() // 2 + 75, 240))
 
 
         basket_sprite = pygame.transform.scale(pygame.image.load("ROYPIZZA.png").convert_alpha(), (100, 150))
