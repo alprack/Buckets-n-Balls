@@ -13,8 +13,6 @@ def on_press(key) :
             client_socket.send('a'.encode())
         elif key.char == 'd' : 
             client_socket.send('d'. encode())
-        elif key.char  == 'w' : 
-            client_socket.send('w'.encode())
         elif key.char == 'r' : 
             client_socket.send('r'.encode())
         elif key.char == 's': 
