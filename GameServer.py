@@ -32,7 +32,7 @@ current_topping = "normal"
 lives = 3
 
 def GameThread():
-    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives, show_start_screen
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -248,7 +248,7 @@ def GameThread():
         clock.tick(60)
 
 def ServerThread() : 
-    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score
+    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score, show_start_screen
 
     host = socket.gethostbyname(socket.gethostname())
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -256,7 +256,7 @@ def ServerThread() :
     host = s.getsockname()[0]  
     s.close()
     print(f"Server IP: {host}")
-    port = 5003  
+    port = 5002  
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
@@ -271,6 +271,9 @@ def ServerThread() :
         data = conn.recv(1024).decode()
         if not data : 
             break 
+
+        if data == 's' : 
+            show_start_screen = False
 
         if data == 'a' :
             basket_x -= basket_speed
