@@ -19,6 +19,8 @@ def on_press(key) :
             client_socket.send('w'.encode())
         elif key.char == 'r' : 
             client_socket.send('r'.encode())
+        elif key.char == ' ' : 
+            client_socket.send(' '.encode())
     except AttributeError :
         pass 
 

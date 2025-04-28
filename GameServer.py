@@ -207,7 +207,7 @@ def GameThread():
             elif current_topping == "slow":
                 slow_topping_rect = pygame.Rect(topping_x, topping_y, 30, 30)
                 if basket_rect.colliderect(slow_topping_rect):
-                    basket_speed -= 1
+                    basket_speed -= 2
                     topping_x = random.randint(0, SCREEN_WIDTH - 30)
                     topping_y = 0
                     slow_topping_image = random.choice(slow_topping_images)
