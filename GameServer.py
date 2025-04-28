@@ -32,7 +32,7 @@ current_topping = "normal"
 lives = 3
 
 def GameThread():
-    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives, show_start_screen
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives, show_start_screen, update_music
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -95,6 +95,8 @@ def GameThread():
             mixer.music.load("ultHighScore.mpg")
             mixer.music.play(-1)
             current_music = "ultHighScore.mpg"
+        elif not mixer.music.get_busy():
+            mixer.music.play(-1)
 
 
     show_start_screen = True
@@ -147,6 +149,9 @@ def GameThread():
                     game_over = False
                     current_topping = "normal"
                     lives = 3 
+                    
+                    update_music(score)
+
                     
 
         update_music(score)
@@ -235,7 +240,6 @@ def GameThread():
 
 
         if game_over:
-            mixer.music.stop()
             over_text = font.render("GAME OVER! Press R to Restart!", True, (255, 0, 0))
             screen.blit(over_text, (SCREEN_WIDTH // 2 - over_text.get_width() // 2, SCREEN_HEIGHT // 2))
 
@@ -243,7 +247,7 @@ def GameThread():
         clock.tick(60)
 
 def ServerThread() : 
-    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score, show_start_screen
+    global basket_x, basket_y, game_over, topping_speed, basket_speed, topping_y, score, show_start_screen, lives, update_music
 
     host = socket.gethostbyname(socket.gethostname())
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -288,6 +292,8 @@ def ServerThread() :
             basket_speed = 20 
             topping_y = 0 
             score = 0 
+            lives = 3 
+            update_music(score)
 
     conn.close() 
 
