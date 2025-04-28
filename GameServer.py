@@ -104,7 +104,7 @@ def GameThread():
         screen.blit(start_screen_image, (0,0))
 
         title = font.render("Roy's Pizza Panic!", True, (0,0,0))
-        subtext = font.render("Press SPACE to start helping Roy!", True, (0,0,0))
+        subtext = font.render("Press S to start helping Roy!", True, (0,0,0))
         description = font.render("Help him catch all the pizza toppings", True, (0,0,0))
         description_1 = font.render("and avoid rotten ones!", True, (0,0,0))
 
@@ -123,7 +123,7 @@ def GameThread():
             if event.type == pygame.QUIT : 
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE : 
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_s : 
                 show_start_screen = False 
 
     while True:
