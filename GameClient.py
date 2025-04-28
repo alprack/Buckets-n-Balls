@@ -27,7 +27,7 @@ def on_press(key) :
 
 def client_program():
     print("trying to connect to server")
-    host = "10.14.88.44"
+    host = "10.22.50.225"
     port = 5002  # socket server port number
 
     global client_socket
