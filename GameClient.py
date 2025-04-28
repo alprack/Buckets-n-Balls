@@ -11,6 +11,8 @@ def on_press(key) :
     try : 
         if key.char == 'a' : 
             client_socket.send('a'.encode())
+        elif key.char == 's': 
+            client_socket.send('s'.encode())
         elif key.char == 'd' : 
             client_socket.send('d'. encode())
         elif key.char == 'r' : 
@@ -24,7 +26,7 @@ def on_press(key) :
 def client_program():
     print("trying to connect to server")
     host = "10.22.50.225"
-    port = 5002  # socket server port number
+    port = 5001  # socket server port number
 
     global client_socket
     client_socket = socket.socket()  # instantiate
