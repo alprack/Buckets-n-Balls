@@ -32,7 +32,7 @@ current_topping = "normal"
 lives = 3
 
 def GameThread():
-    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives, show_start_screen
+    global basket_x, basket_y, topping_x, topping_y, topping_speed, basket_speed, score, game_over, current_topping, lives
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -128,7 +128,6 @@ def GameThread():
 
     while True:
         screen.blit(image, (0, 0))
-        #screen.fill((255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -158,10 +157,6 @@ def GameThread():
                 basket_x -= basket_speed
             if keys[pygame.K_d]:
                 basket_x += basket_speed
-           #if keys[pygame.K_w] : 
-           #     basket_y -= basket_speed
-           # if keys[pygame.K_s] : 
-           #     basket_y += basket_speed
 
             if basket_x < 0 : 
                 basket_x = 0
@@ -279,10 +274,6 @@ def ServerThread() :
             basket_x -= basket_speed
         elif data == 'd' : 
             basket_x += basket_speed
-        # elif data == 'w' : 
-        #     basket_y -= basket_speed
-        # elif data == 's' : 
-        #     basket_y += basket_speed
 
         if basket_x < 0 : 
             basket_x = 0
